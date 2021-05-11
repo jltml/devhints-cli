@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+require 'launchy'
+require 'net/http'
+
+class MyCLI < Thor
+
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "open [THING]", "Search for a certain cheat sheet (you can also just run `devhints [THING]` and it's the same)"
+  def open(thing=nil)
+    if thing == nil
+      Launchy.open "https://devhints.io/"
+    else
+      response = Net::HTTP.get_response(URI.parse("https://devhints.io/#{thing}"))
+      if response.code_type == Net::HTTPNotFound
+        puts "! Page not found (https://devhints.io/#{thing})"
+        exit 1
+      else
+        Launchy.open "https://devhints.io/#{thing}"
+      end
+    end
+  end
+
+  desc "version", "Print version"
+  def version
+    begin
+      puts "Devhints CLI v#{Gem.loaded_specs["devhints"].version}"
+      exit 0
+    rescue
+      puts "! Devhints CLI: error loading version"
+      exit 1
+    end
+  end
+
+  map %w[--version -v] => :version
+  default_task :search
+
+end
+
+# The following is from https://stackoverflow.com/a/49044225/
+help_commands = Thor::HELP_MAPPINGS + ["help"]
+if help_commands.any? { |cmd| ARGV.include? cmd }
+  help_commands.each do |cmd|
+    if match = ARGV.delete(cmd)
+      ARGV.unshift match
+    end
+  end
+end
+
+MyCLI.start(ARGV)
