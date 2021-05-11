@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'devhints'
-  s.version     = '0.1.1'
+  s.version     = '0.1.2'
   s.summary     = "A CLI for devhints.io"
   s.description = "This is a simple gem that checkes whether a cheat sheet for something exists at devhints.io, then opens it in a web browser if it does."
   s.authors     = ["Jack MapelLentz"]
