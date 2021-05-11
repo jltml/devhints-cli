@@ -37,7 +37,7 @@ class MyCLI < Thor
   end
 
   map %w[--version -v] => :version
-  default_task :search
+  default_task :open
 
 end
 
